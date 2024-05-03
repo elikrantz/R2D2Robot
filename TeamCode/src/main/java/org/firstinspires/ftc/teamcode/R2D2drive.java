@@ -2,14 +2,21 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.Device;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+import java.util.Random;
+
+@TeleOp
 public class R2D2drive extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor backRight;
@@ -18,8 +25,11 @@ public class R2D2drive extends LinearOpMode {
     private IMU imu;
     private Gamepad currentGamepad1;
     private Gamepad previousGamepad1;
+    private AndroidSoundPool androidSoundPool;
+    private ElapsedTime timeBetweenSound;
 
     private double speed1 = 0.5;
+    private double soundTime = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,14 +41,22 @@ public class R2D2drive extends LinearOpMode {
         /** when code starts these 4 lines assign an empty virtual gamepad (otherwise know as a controller) to each **/
         currentGamepad1 = new Gamepad();
         previousGamepad1 = new Gamepad();
-
+        timeBetweenSound.reset();
         while (opModeIsActive()) {
             //currentIMUAngle = imu.getRobotOrientationAsQuaternion();
             previousGamepad1.copy(currentGamepad1); /** copies the previous loop's gamepad1 state **/
             currentGamepad1.copy(gamepad1); /** copies the current gamepad1 state **/
             robotOriented();
             //fieldOriented();
+            telemetry.update();
+            if (timeBetweenSound.seconds() >= soundTime) {
+                soundTime = randomNum();
+                timeBetweenSound.reset();
+                androidSoundPool.play(randomSound());
+                timeBetweenSound.reset();
+            }
         }
+        androidSoundPool.close();
     }
 
     private void Initialization() {
@@ -57,7 +75,7 @@ public class R2D2drive extends LinearOpMode {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
+        androidSoundPool = new AndroidSoundPool();
 
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
@@ -130,7 +148,12 @@ public class R2D2drive extends LinearOpMode {
         backRight.setPower(backRightPower);
     }
 
-    private void TestingAudio() {
-        text2speechCode.askSpeechInput(,this);
+    public String randomSound() {
+        String[] audioFiles = new String[] {"Voicy_R2-D2 - 10.mp3","Voicy_R2-D2 - 11.mp3","Voicy_R2-D2 - 12.mp3"};
+        int randomInt = new Random().nextInt(3);
+        return audioFiles[randomInt];
+    }
+    private int randomNum() {
+        return new Random().nextInt(20) + 40;
     }
 }

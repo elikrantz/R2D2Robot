@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
@@ -5,6 +6,7 @@ import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 
@@ -49,3 +51,4 @@ public class text2speechCode extends AppCompatActivity {
         }
     }
 }
+*/
