@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -49,12 +50,14 @@ public class R2D2drive extends LinearOpMode {
             robotOriented();
             //fieldOriented();
             telemetry.update();
-            if (timeBetweenSound.seconds() >= soundTime) {
+            /*if (timeBetweenSound.seconds() >= soundTime) {
                 soundTime = randomNum();
                 timeBetweenSound.reset();
-                androidSoundPool.play(randomSound());
+                String sound = randomSound();
+                //androidSoundPool.preloadSound(sound);
+                androidSoundPool.play(sound);
                 timeBetweenSound.reset();
-            }
+            }*/
         }
         androidSoundPool.close();
     }
@@ -76,6 +79,8 @@ public class R2D2drive extends LinearOpMode {
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         androidSoundPool = new AndroidSoundPool();
+        androidSoundPool.initialize(SoundPlayer.getInstance());
+        timeBetweenSound = new ElapsedTime();
 
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
